@@ -1,5 +1,5 @@
 project:
-  name: connect-integration-perficient-msdynamics
+  name: cfn-ps-connect-integration-perficient-msdynamics
   owner: quickstart@amazon.com
   package_lambda: false
   regions:
