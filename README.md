@@ -1,4 +1,9 @@
 # connect-integration-perficient-msdynamics
+## Deprecation Notice
+
+:x: This repository is subject to deprecation in Q4 2024. For more details, [please review this announcement](https://github.com/aws-ia/.announcements/issues/1). 
+
+
 ## Amazon Connect Integration -- Toolkit for Microsoft Dynamics 365 by Perficient
 
 This Quick Start by Perficient enables organizations to offer better customer experiences in Amazon Connect by providing data integration with Microsoft Dynamics 365.
