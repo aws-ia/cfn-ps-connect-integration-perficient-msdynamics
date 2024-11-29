@@ -152,7 +152,7 @@ Resources:
       MemorySize: 128
       Role:
         Fn::GetAtt: TestFunctionExecutionRole.Arn
-      Runtime: nodejs14.x
+      Runtime: nodejs16.x
       Timeout: 8
       Code:
         S3Bucket:
@@ -161,22 +161,6 @@ Resources:
           Fn::Sub: ${QSS3KeyPrefix}functions/packages/getDynamicsToken-test/lambda.zip
     DependsOn:
     - TestFunctionExecutionRole
-  InvokeTestGetDynamicsTokenFunction:
-    Type: Custom::InvokeTestGetDynamicsTokenFunction
-    Version: '1.0'
-    Properties:
-      ServiceToken:
-        Fn::GetAtt: TestGetDynamicsTokenFunction.Arn
-      AzureADDomain:
-        Ref: AzureADDomain
-      DynamicsHostDomain:
-        Ref: DynamicsHostDomain
-      DynamicsClientId:
-        Ref: DynamicsClientId
-      DynamicsClientSecret:
-        Ref: DynamicsClientSecret
-    DependsOn:
-    - TestGetDynamicsTokenFunction
   GetDynamicsTokenFunctionExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -203,8 +187,6 @@ Resources:
               ForAllValues:StringLike:
                 ses:Recipients:
                   - !Sub ${NotificationEmailAddress}
-    DependsOn:
-    - InvokeTestGetDynamicsTokenFunction
   GetDynamicsTokenFunction:
     Type: AWS::Lambda::Function
     Properties:
@@ -213,7 +195,7 @@ Resources:
       MemorySize: 256
       Role:
         Fn::GetAtt: GetDynamicsTokenFunctionExecutionRole.Arn
-      Runtime: nodejs14.x
+      Runtime: nodejs16.x
       Timeout: 8
       Code:
         S3Bucket:
@@ -236,7 +218,7 @@ Resources:
       MemorySize: 128
       Role:
         Fn::GetAtt: TestFunctionExecutionRole.Arn
-      Runtime: nodejs14.x
+      Runtime: nodejs16.x
       Timeout: 8
       Code:
         S3Bucket:
@@ -245,16 +227,6 @@ Resources:
           Fn::Sub: ${QSS3KeyPrefix}functions/packages/lookupDynamicsAccount-test/lambda.zip
     DependsOn:
     - GetDynamicsTokenFunction
-  InvokeTestLookupDynamicsAccountFunction:
-    Type: Custom::InvokeTestLookupDynamicsAccountFunction
-    Version: '1.0'
-    Properties:
-      ServiceToken:
-        Fn::GetAtt: TestLookupDynamicsAccountFunction.Arn
-      DynamicsHostDomain:
-        Ref: DynamicsHostDomain
-    DependsOn:
-    - TestLookupDynamicsAccountFunction
   DynamicsDataDipFunctionExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -280,8 +252,6 @@ Resources:
             - !GetAtt
               - GetDynamicsTokenFunction
               - Arn
-    DependsOn:
-    - InvokeTestLookupDynamicsAccountFunction
   LookupDynamicsAccountFunction:
     Type: AWS::Lambda::Function
     Properties:
@@ -290,7 +260,7 @@ Resources:
       MemorySize: 256
       Role:
         Fn::GetAtt: DynamicsDataDipFunctionExecutionRole.Arn
-      Runtime: nodejs14.x
+      Runtime: nodejs16.x
       Timeout: 8
       Code:
         S3Bucket:
@@ -321,7 +291,7 @@ Resources:
       MemorySize: 128
       Role:
         Fn::GetAtt: TestFunctionExecutionRole.Arn
-      Runtime: nodejs14.x
+      Runtime: nodejs16.x
       Timeout: 8
       Code:
         S3Bucket:
@@ -330,16 +300,6 @@ Resources:
           Fn::Sub: ${QSS3KeyPrefix}functions/packages/addDynamicsAccountNote-test/lambda.zip
     DependsOn:
     - LookupDynamicsAccountFunctionAmazonConnectInvokePermission
-  InvokeTestAddDynamicsAccountNoteFunction:
-    Type: Custom::InvokeTestAddDynamicsAccountNoteFunction
-    Version: '1.0'
-    Properties:
-      ServiceToken:
-        Fn::GetAtt: TestAddDynamicsAccountNoteFunction.Arn
-      DynamicsHostDomain:
-        Ref: DynamicsHostDomain
-    DependsOn:
-    - TestAddDynamicsAccountNoteFunction
   AddDynamicsAccountNoteFunction:
     Type: AWS::Lambda::Function
     Properties:
@@ -348,7 +308,7 @@ Resources:
       MemorySize: 256
       Role:
         Fn::GetAtt: DynamicsDataDipFunctionExecutionRole.Arn
-      Runtime: nodejs14.x
+      Runtime: nodejs16.x
       Timeout: 8
       Code:
         S3Bucket:
@@ -360,8 +320,6 @@ Resources:
           GetDynamicsTokenLambdaName: !Sub ${GetDynamicsTokenFunction}
           AWSRegion: !Sub ${AWS::Region}
           DynamicsHostDomain: !Sub ${DynamicsHostDomain}
-    DependsOn:
-    - InvokeTestAddDynamicsAccountNoteFunction
   AddDynamicsAccountNoteFunctionAmazonConnectInvokePermission:
     Type: AWS::Lambda::Permission
     Properties:
